@@ -86,9 +86,7 @@ class Linear_Regression():
         
         #print('predicted',(np.matmul(self.X, self.coef)-self.y))
        # print('mul',np.dot((np.matmul(self.X, self.coef)-self.y),self.X))
-        grad = coef * np.matmul(self.X.T, (np.matmul(self.X, self.coef)-self.y))
-        
-        grad = grad/max(grad)
+        grad = coef * np.dot(self.X.T, (self.y - np.matmul(self.X, self.coef)))
         
 
         ############### END TODO 3 ###############
@@ -110,20 +108,19 @@ class Linear_Regression():
         print('Start Training')
         for i in range(self.num_iter):
             previous_y_hat = np.matmul(self.X,self.coef)
-            print(previous_y_hat-self.y)
             grad = self.gradient()
-            temp_coef = self.coef + (self.alpha * grad)
+            temp_coef = self.coef - (self.alpha * grad)
             
            # print('prev',self.coef, 'curr',temp_coef)
             #print('------------                     ')
 
             
             if self.penalty == 'l2':
-                previous_reg_cost = 2 * self.lam * self.coef
-                current_reg_cost = 2 * self.lam * temp_coef
+                previous_reg_cost = sum(2 * self.lam * self.coef)
+                current_reg_cost = sum(2 * self.lam * temp_coef)
             elif self.penalty == 'l1':
-                previous_reg_cost = self.lam * np.sign(self.coef)
-                current_reg_cost = self.lam * np.sign(temp_coef)
+                previous_reg_cost = sum(self.lam * np.sign(self.coef))
+                current_reg_cost = sum(self.lam * np.sign(temp_coef))
             else:
                 previous_reg_cost = 0
                 current_reg_cost = 0
@@ -177,12 +174,13 @@ class Linear_Regression():
         if self.intercept:
 
             intercept_col = np.ones((self.X.shape[0], 1))
-            X = np.concatenate((X, intercept_col), axis=1)
+            X =  np.insert(X,0, intercept_col,axis=1)
         
             
 
         # Find the model's predictions
         # Hint: Use matrix multiplication ('@' might come in handy here)
+        print(np.shape(X),np.shape(self.coef))
         y = np.matmul(X,self.coef)
         return y
         ############### END TODO 9 ###############
