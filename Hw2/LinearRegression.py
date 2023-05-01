@@ -169,18 +169,19 @@ class Linear_Regression():
         for i in range(X.shape[1]):
             X_norm[:, i] = (X[:, i] - self.min[:, i]) / (self.max[:, i] - self.min[:, i])
         X = X_norm
+        
         ############### START TODO 9 ###############
         # add bias (if necessary, same as TODO 2)
+        
         if self.intercept:
-
-            intercept_col = np.ones((self.X.shape[0], 1))
-            X =  np.insert(X,0, intercept_col,axis=1)
+    
+            intercept_col = np.ones((X.shape[0], 1))
+            X = np.hstack((X, intercept_col))
         
             
 
         # Find the model's predictions
         # Hint: Use matrix multiplication ('@' might come in handy here)
-        print(np.shape(X),np.shape(self.coef))
         y = np.matmul(X,self.coef)
         return y
         ############### END TODO 9 ###############
