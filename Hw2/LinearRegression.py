@@ -86,7 +86,7 @@ class Linear_Regression():
         
         #print('predicted',(np.matmul(self.X, self.coef)-self.y))
        # print('mul',np.dot((np.matmul(self.X, self.coef)-self.y),self.X))
-        grad = coef * np.dot(self.X.T, (self.y - np.matmul(self.X, self.coef)))
+        grad = coef * np.matmul(self.X.T, (self.y - np.matmul(self.X, self.coef)))
         
 
         ############### END TODO 3 ###############
