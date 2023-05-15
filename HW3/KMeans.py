@@ -58,9 +58,13 @@ class KMeans():
         # 1. np.random.uniform(), np.percentile() might be useful
         # 2. make sure to look over its parameters if you're not sure
         ####################
-        raise NotImplementedError
-        for i in range(n):
-            self.centers[:,i] = ...
+
+        for center_ind in k:
+            for feature_ind in n:
+                feature = X[:,feature_ind]
+                ten_percentile = np.percentile(c,10)
+                ninety_percentile = np.percentile(col, 90)
+                self.centers[center_ind][feature_ind] = np.random.uniform(ten_percentile,ninety_percentile)
         ##### END TODO 1 #####
 
         for i in range(self.num_iter):
@@ -89,9 +93,13 @@ class KMeans():
             # Copy-paste this part of your implemented code
             # to the predict function, and return cluster_idx in that function
             ####################
-            raise NotImplementedError
-            distances = np.array(...)
-            cluster_idx = ...
+            cluster_idx = np.zeros(m)
+            distances = np.zeros((m,self.k))
+            for ob_ind in range(m):
+                for center_ind in range(self.k):
+                    distances[ob_ind][center_ind] = np.linalg.norm(X[ob_ind] - self.centers[center_ind], ord=self.order)
+                cluster_idx[ob_ind] = np.argmin(distances[ob_ind])
+                
             ##### END TODO 2 #####
 
             ##### TODO 3 ######
@@ -106,14 +114,14 @@ class KMeans():
             # Hint:
             # 1. np.mean(), np.median() with axis might be helpful
             ####################
-            raise NotImplementedError
+
             for idx in range(self.k):
-                cluster_coordinates = X[cluster_idx == idx]
+                cluster_coordinates = X[cluster_idx == idx]  # first cluster_idx== idx return a bool array, then X[bool_array] keeps only the row with 'True', which in this case, the row in X belongs to the current cluster ind
                 if self.order == 2:
-                    cluster_center = ...
+                    cluster_center = np.mean(cluster_coordinates)
                 elif self.order == 1:
-                    cluster_center = ...                    
-                new_centers[idx, :] = ...
+                    cluster_center = np.median(cluster_coordinates)
+                new_centers[idx, :] = cluster_center
             ##### END TODO 3 #####
 
             ##### TODO 4 ######
@@ -126,12 +134,11 @@ class KMeans():
             # Hint:
             # 1. .all() might be helpful
             ####################
-            raise NotImplementedError
-            if ...:
+            if np.all(cluster_ind == self.cluster_idx):
                 print(f"Early Stopped at Iteration {i}")
                 return self
-            self.centers = ...
-            self.cluster_idx = ...
+            self.centers = new_centers
+            self.cluster_idx = cluster_idx
             ##### END TODO 4 #####
         return self
 
@@ -139,5 +146,10 @@ class KMeans():
     # This function makes predictions with input data
     # Copy-paste your code from TODO 2 and return cluster_idx
     def predict(self, X):
-        raise NotImplementedError
-        ...
+        m = len(X)
+        distances = np.zeros((m,self.k))
+        for ob_ind in range(m):
+            for center_ind in range(self.k):
+                distances[ob_ind][center_ind] = np.linalg.norm(X[ob_ind] - self.centers[center_ind], ord=self.order)
+            self.cluster_idx[ob_ind] = np.argmin(distances[ob_ind])
+        return self.cluster_idx
