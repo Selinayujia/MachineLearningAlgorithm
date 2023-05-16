@@ -40,24 +40,6 @@ class KMeans():
         # which is a 1d-array of (number of observations)
         self.cluster_idx = np.zeros(m)
 
-        ##### TODO 1 ######
-        #
-        # Task: initialize self.centers
-        #
-        # Instruction: 
-        # For each dimension (feature) in X, use the 10th percentile and 
-        # the 90th percentile to form a uniform distribution. Then, we will initialize 
-        # the values of each center by randomly selecting values from the distributions.
-        #
-        # Note:
-        # This method is by no means the best initialization method. However, we would
-        # like you to follow our guidelines in this HW. We will ask you to discuss some better
-        # initializaiton methods in the notebook.
-        #
-        # Hint:
-        # 1. np.random.uniform(), np.percentile() might be useful
-        # 2. make sure to look over its parameters if you're not sure
-        ####################
 
         for i in range(n):
             feature = X[:,i]
@@ -71,7 +53,7 @@ class KMeans():
             for ob_ind in range(m):
                 for center_ind in range(self.k):
                     distances[ob_ind][center_ind] = np.linalg.norm(X[ob_ind] - self.centers[center_ind], ord=self.order)
-                cluster_idx[ob_ind] = np.argmin(distances[ob_ind])
+            cluster_idx = np.argmin(distances, axis=1)
                 
             new_centers = np.zeros((self.k, n))
             for idx in range(self.k):
